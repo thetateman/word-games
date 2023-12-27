@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+    </head>
+    <body>
+        <div class="content">
+            
+            <div id="current-word-container">
+                
+                <span id="current-word-label">Current Word:  </span><span id="current-word"></span>
+            </div>
+            <form id="get-vid-form">
+                <input id="word-input" autocomplete="off" placeholder="Your Word"/>
+            </form>
+            <div id="error-text-container">
+                
+            </div>
+        </div>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="./index.js"></script>
+    </body>
+</html>
