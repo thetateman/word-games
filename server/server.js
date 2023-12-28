@@ -558,28 +558,45 @@ io.on("connection", (sock) => {
     console.log(info.word);
     console.log(currentWord);
     info.word = info.word.toUpperCase();
-    if (info.word.length !== currentWord.length + 1) {
-      sock.emit("word-error", { error: "Incorrect Length" });
-    } else {
-      let tempWord = info.word;
-      let didntUseLetters = false;
-      letters.forEach((letter) => {
-        let tempTempWord = tempWord.replace(letter, "");
-        if (tempTempWord === tempWord) {
-          didntUseLetters = true;
-        }
-        tempWord = tempTempWord;
-      });
-      if (didntUseLetters) {
-        sock.emit("word-error", {
-          error: "Did not use all the correct letters.",
-        });
-      } else if (validWordsO[info.word] !== 1) {
-        sock.emit("word-error", { error: "That's not a word!" });
-      } else {
-        currentWord = info.word;
-        io.emit("word-ready", info);
+    info.discardWord = info.discardWord.toUpperCase();
+    if (info.discardWord.length != 0) {
+      let splitLength = Math.floor(currentWord.length / 2);
+      if (
+        (info.word.length !== splitLength &&
+          info.word.length !== splitLength + 1) ||
+        (info.discardWord.length !== splitLength &&
+          info.discardWord.length !== splitLength + 1)
+      ) {
+        sock.emit("word-error", { error: "Split Words Incorrect Length" });
+        return;
       }
+    } else {
+      if (info.word.length !== currentWord.length + 1) {
+        sock.emit("word-error", { error: "Incorrect Length" });
+        return;
+      }
+    }
+    let tempWord = info.word + info.discardWord;
+    let didntUseLetters = false;
+    letters.forEach((letter) => {
+      let tempTempWord = tempWord.replace(letter, "");
+      if (tempTempWord === tempWord) {
+        didntUseLetters = true;
+      }
+      tempWord = tempTempWord;
+    });
+    if (didntUseLetters) {
+      sock.emit("word-error", {
+        error: "Did not use all the correct letters.",
+      });
+    } else if (
+      validWordsO[info.word] !== 1 ||
+      (info.discardWord.length != 0 && validWordsO[info.discardWord] !== 1)
+    ) {
+      sock.emit("word-error", { error: "That's not a word!" });
+    } else {
+      currentWord = info.word;
+      io.emit("word-ready", info);
     }
   });
 });

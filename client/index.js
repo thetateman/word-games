@@ -1,9 +1,29 @@
 const onNewWord = (e) => {
   e.preventDefault();
   let wordInput = document.getElementById("word-input");
+  let discardWordInput = document.getElementById("discard-word-input");
+  let discardWord = "";
+  if (discardWordInput) {
+    discardWord = discardWordInput.value;
+    discardWordInput.value = "";
+    discardWordInput.remove();
+  }
   let value = wordInput.value;
   wordInput.value = "";
-  window.active_socket_conn.emit("new-word", { word: value });
+  window.active_socket_conn.emit("new-word", {
+    word: value,
+    discardWord: discardWord,
+  });
+  document.getElementById("split-button").removeAttribute("disabled");
+};
+const splitWord = (e) => {
+  e.preventDefault();
+  let wordInputForm = document.getElementById("word-input-form");
+  document.getElementById("split-button").setAttribute("disabled", "");
+  wordInputForm.insertAdjacentHTML(
+    "beforeend",
+    `<input id="discard-word-input" class="word-input" autocomplete="off" placeholder="Discarded Word"/>`
+  );
 };
 
 (() => {
@@ -26,5 +46,8 @@ const onNewWord = (e) => {
       `<span id="error-text">${info.error}</span>`
     );
   });
-  document.querySelector("#get-vid-form").addEventListener("submit", onNewWord);
+  document
+    .querySelector("#word-input-form")
+    .addEventListener("submit", onNewWord);
+  document.querySelector("#split-button").addEventListener("click", splitWord);
 })();
