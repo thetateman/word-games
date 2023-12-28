@@ -4,12 +4,13 @@ const path = require("path");
 const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
-//const mongoose = require("mongoose");
-//const session = require("express-session");
+const mongoose = require("mongoose");
+const session = require("express-session");
 const helmet = require("helmet");
 const fs = require("node:fs");
 
-let validWords = [];
+let sessions = [];
+let currentSession = 0;
 let validWordsO = {};
 
 try {
@@ -18,7 +19,7 @@ try {
     "utf8"
   );
   //console.log(data);
-  validWords = data.split(/\r?\n/);
+  let validWords = data.split(/\r?\n/);
   validWords.forEach((validWord) => {
     validWordsO[validWord.toUpperCase()] = 1;
   });
@@ -26,12 +27,12 @@ try {
   console.log(err);
 }
 
-//const MongoStore = require('connect-mongo')(session);
+const MongoStore = require("connect-mongo")(session);
 
-//require('dotenv').config();
-//const verbose = (process.env.VERBOSE === 'true');
+require("dotenv").config();
+const verbose = process.env.VERBOSE === "true";
 
-//const connection = mongoose.createConnection(process.env.RESTREVIEWS_DB_URI);
+const connection = mongoose.createConnection(process.env.RESTREVIEWS_DB_URI);
 
 const app = express();
 
@@ -50,37 +51,35 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-var session = require("express-session");
-var FileStore = require("session-file-store")(session);
+// var FileStore = require("session-file-store")(session);
 
-var fileStoreOptions = {};
+// var fileStoreOptions = {};
 
-let sessionMiddleware = session({
+// let sessionMiddleware = session({
+//   resave: false,
+//   saveUninitialized: true,
+//   store: new FileStore(fileStoreOptions),
+//   secret: "ashf78awhr8hfaw09thbw78ftuw",
+//   cookie: {
+//     maxAge: 1000 * 60 * 60 * 24,
+//     secure: false,
+//   },
+// });
+
+const sessionStore = new MongoStore({
+  mongooseConnection: connection,
+  collection: "sessions",
+});
+
+const sessionMiddleware = session({
+  secret: "some secret", //TODO: CHANGE THIS
   resave: false,
   saveUninitialized: true,
-  store: new FileStore(fileStoreOptions),
-  secret: "ashf78awhr8hfaw09thbw78ftuw",
+  store: sessionStore,
   cookie: {
     maxAge: 1000 * 60 * 60 * 24,
   },
 });
-
-/*
-const sessionStore = new MongoStore({
-    mongooseConnection: connection,
-    collection: 'sessions'
-});
-
-const sessionMiddleware = session({
-    secret: 'some secret', //TODO: CHANGE THIS
-    resave: false,
-    saveUninitialized: true,
-    store: sessionStore,
-    cookie: {
-        maxAge: 1000 * 60 * 60 * 24
-    }
-});
-*/
 
 app.use(sessionMiddleware);
 
@@ -111,21 +110,14 @@ app.use(authLogic);
 
 app.use(
   express.static(path.resolve(`${__dirname}/../client`), {
-    index: "index.html",
+    index: "start.html",
   })
 );
 
+app.use("/play", (req, res) => {
+  res.sendFile(path.resolve(`${__dirname}/../client/index.html`));
+});
 /*
-
-app.use('/login', (req, res) => {
-    res.sendFile(path.resolve(`${__dirname}/../client/login.html`));
-});
-app.use('/lobby', (req, res) => {
-    res.sendFile(path.resolve(`${__dirname}/../client/lobby.html`));
-});
-app.use('/about', (req, res) => {
-    res.sendFile(path.resolve(`${__dirname}/../client/about.html`));
-});
 app.use('/game', (req, res) => {
     let requestedGameID = req.query.gameid;
     res.sendFile(path.resolve(`${__dirname}/../client/index.html`));
@@ -528,6 +520,24 @@ const startingWords = [
   "Why",
 ];
 
+app.use("/start-game", (req, res) => {
+  req.session.gameNumber = currentSession;
+  let startingWord =
+    startingWords[
+      Math.floor(Math.random() * startingWords.length)
+    ].toUpperCase();
+  sessions[currentSession] = {
+    startingWord: startingWord,
+    currentWord: startingWord,
+  };
+  currentSession++;
+  res.redirect(`/play?room=${req.session.gameNumber}`);
+});
+app.use("/join-game", (req, res) => {
+  req.session.gameNumber = req.body["room-code-input"];
+  res.redirect(`/play?room=${req.session.gameNumber}`);
+});
+
 const server = http.createServer(app);
 const io = socketio(server);
 io.use(function (socket, next) {
@@ -537,22 +547,28 @@ io.use(function (socket, next) {
 let waiting = false;
 let startingWord = "";
 let currentWord = startingWord;
-let gamerNumber = 1;
+
 io.on("connection", (sock) => {
-  sock.request.session.number = gamerNumber;
-  gamerNumber++;
-  if (!waiting) {
-    startingWord =
-      startingWords[
-        Math.floor(Math.random() * startingWords.length)
-      ].toUpperCase();
+  if (
+    sock.request.session === undefined ||
+    sock.request.session.gameNumber === undefined ||
+    sessions[sock.request.session.gameNumber] === undefined
+  ) {
+    sock.emit("kick-to-login");
+    return;
   }
-  waiting = waiting ? false : true;
+
+  let gameNumber = sock.request.session.gameNumber;
+  sock.join(gameNumber);
+  startingWord = sessions[gameNumber].startingWord;
   currentWord = startingWord;
 
   console.log(startingWord);
-  sock.emit("gamer-numer", { number: gamerNumber });
-  io.emit("word-ready", { word: startingWord });
+  console.log(gameNumber);
+
+  io.in(gameNumber).emit("word-ready", {
+    word: startingWord,
+  });
   sock.on("new-word", (info) => {
     let letters = currentWord.split("");
     console.log(info.word);
