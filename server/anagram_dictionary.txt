@@ -4,6 +4,7 @@ aardvark
 aardvarks
 aardwolf
 aardwolves
+ab
 aba
 abaca
 abaci
@@ -3413,6 +3414,7 @@ arts
 arty
 arum
 arval
+as
 asafetida
 asafoetida
 asbestos
@@ -5084,6 +5086,7 @@ bazaar
 bazaars
 bazooka
 bazookas
+be
 beach
 beachcomber
 beachcombers
@@ -5171,6 +5174,7 @@ become
 becomes
 becoming
 becomingly
+bed
 bedaub
 bedazzle
 bedazzled
@@ -6497,6 +6501,7 @@ boss
 bossed
 bosses
 bossy
+bot
 botanical
 botanist
 botanists
@@ -7526,6 +7531,7 @@ buzzes
 buzzing
 buzzword
 buzzwords
+by
 bye
 byelaw
 byelaws
@@ -25361,6 +25367,7 @@ fatuity
 fatuous
 fatuously
 fatuousness
+faux
 faubourg
 faucet
 faucets
@@ -27688,6 +27695,7 @@ frantically
 franticly
 franticness
 frappe
+frat
 fraternal
 fraternally
 fraternities
@@ -30095,6 +30103,7 @@ gossipry
 gossips
 gossipy
 got
+goth
 gothicize
 gothicized
 gothicizes
@@ -34460,6 +34469,7 @@ ikebana
 ilia
 iliac
 ilium
+ilk
 ill
 illation
 illative
@@ -39197,6 +39207,9 @@ jettisoning
 jettisons
 jetty
 jettying
+jew
+jews
+jewish
 jewel
 jeweled
 jeweler
@@ -39406,6 +39419,7 @@ jubilantly
 jubilation
 jubilee
 judeo
+judaism
 judge
 judged
 judges
@@ -41321,6 +41335,8 @@ lido
 lidos
 lids
 lie
+lied
+lies
 liege
 lieges
 lien
@@ -42358,6 +42374,7 @@ lowliest
 lowliness
 lowly
 lowness
+lows
 lox
 loxes
 loyal
@@ -42421,6 +42438,7 @@ luffed
 luffing
 luffs
 lug
+luge
 luggage
 lugged
 lugger
@@ -42514,6 +42532,7 @@ lunchroom
 lunchrooms
 lunchtime
 lunchtimes
+lune
 lunette
 lunettes
 lung
@@ -43914,6 +43933,7 @@ mayhap
 mayhem
 mayhems
 mayn't
+mayo
 mayonnaise
 mayonnaises
 mayor
@@ -43934,6 +43954,7 @@ mazurkas
 mazy
 mazzard
 mazzards
+me
 mead
 meadow
 meadowlark
@@ -48015,6 +48036,9 @@ nephritides
 nephritis
 nepotism
 neptunium
+nerd
+nerds
+nerdy
 nerve
 nerved
 nerveless
@@ -50887,6 +50911,7 @@ orbiters
 orbiting
 orbits
 orbs
+orca
 orchard
 orchardist
 orchardists
@@ -56363,6 +56388,7 @@ porker
 porkers
 porkies
 porky
+porn
 pornographer
 pornographers
 pornographic
@@ -59254,6 +59280,7 @@ pyrrhic
 python
 pythons
 pyx
+qi
 quack
 quacked
 quackery
@@ -78606,6 +78633,7 @@ tightwire
 tightwires
 tigress
 tigresses
+tike
 tiki
 tikis
 tilde
@@ -81078,6 +81106,8 @@ typifying
 typing
 typist
 typists
+typo
+typos
 typographer
 typographers
 typographic
@@ -86263,6 +86293,7 @@ vulvar
 vulviform
 vying
 wabble
+wack
 wackier
 wackiest
 wackily
