@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+    </head>
+    <body>
+        <div class="content">
+            
+            
+            <form id="join-game-form" action="/join-game" method="POST">
+                <input id="room-code-input" name="room-code-input" class="word-input" autocomplete="off" placeholder="Room Code"/>
+                <button id="join-game-button" type="submit">Join Game</button>
+            </form>
+            <form id="join-game-form" action="/start-game" method="POST">
+                <button id="start-game-button">Start Game</button>
+            </form>
+            
+                
+            
+        </div>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="./start.js"></script>
+    </body>
+</html>

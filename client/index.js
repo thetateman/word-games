@@ -46,6 +46,9 @@ const splitWord = (e) => {
       `<span id="error-text">${info.error}</span>`
     );
   });
+  sock.on("kick-to-login", (info) => {
+    window.location = "/";
+  });
   document
     .querySelector("#word-input-form")
     .addEventListener("submit", onNewWord);

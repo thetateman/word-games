@@ -64,6 +64,10 @@ a {
     color: red;
 }
 
+button {
+    margin: 1rem auto;
+    font-size: 1.2rem;
+}
 #split-button {
     margin: 1rem auto;
     display: block;
