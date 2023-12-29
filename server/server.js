@@ -546,7 +546,6 @@ io.use(function (socket, next) {
 
 let waiting = false;
 let startingWord = "";
-let currentWord = startingWord;
 
 io.on("connection", (sock) => {
   if (
@@ -561,15 +560,15 @@ io.on("connection", (sock) => {
   let gameNumber = sock.request.session.gameNumber;
   sock.join(gameNumber);
   startingWord = sessions[gameNumber].startingWord;
-  currentWord = startingWord;
 
   console.log(startingWord);
   console.log(gameNumber);
 
   io.in(gameNumber).emit("word-ready", {
-    word: startingWord,
+    word: sessions[gameNumber].currentWord,
   });
   sock.on("new-word", (info) => {
+    let currentWord = sessions[gameNumber].currentWord;
     let letters = currentWord.split("");
     console.log(info.word);
     console.log(currentWord);
@@ -611,7 +610,7 @@ io.on("connection", (sock) => {
     ) {
       sock.emit("word-error", { error: "That's not a word!" });
     } else {
-      currentWord = info.word;
+      sessions[gameNumber].currentWord = info.word;
       io.emit("word-ready", info);
     }
   });
